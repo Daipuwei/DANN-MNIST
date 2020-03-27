@@ -7,7 +7,7 @@
  2. opencv 3.4.5.20
  3. numpy 1.18.1
 
----
+
 # Train
 首先下载[MNIST数据集](http://yann.lecun.com/exdb/mnist/)，放在项目文件的/data/mnist子文件夹下。之后下载[BSDS500数据集](https://www2.eecs.berkeley.edu/Research/Projects/CS/vision/grouping/resources.html#bsds500)放在项目文件的/data/BSR_bsds500.tgz路径下。
 
@@ -21,7 +21,7 @@ python create_mnistm.py
 ```python
 python train.py
 ```
----
+
 # 实验结果
 下面是训练过程中的相关tensorboard的相关指标在训练过程中的走势图。首先是训练误差的走势图，主要包括训练域分类误差、训练图像分类误差和训练总误差。
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200225145253405.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMwMDkxOTQ1,size_16,color_FFFFFF,t_70#pic_center)
