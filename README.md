@@ -16,7 +16,7 @@
 ```python
 python create_mnistm.py
 ```
-脚本运行结束后，MNIST-M数据集将保存在项目文件的/data/mnistm子文件夹下。
+脚本运行结束后，MNIST-M数据集将保存在项目文件的/dataset/mnistm子文件夹下。
 之后运行模型训练脚本train.py即可，运行命令为为：
 ```python
 python train.py
