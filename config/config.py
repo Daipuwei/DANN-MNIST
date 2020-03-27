@@ -6,6 +6,8 @@
 # @Software: PyCharm
 
 import os
+import cv2
+import numpy as np
 
 class config(object):
 
@@ -52,6 +54,7 @@ class config(object):
         """
         # 根据相关传入参数进行参数更新
         self.__dict__.update(kwargs)
+
 
     def save_config(self,time):
         """

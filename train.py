@@ -10,9 +10,39 @@ import numpy as np
 import pickle as pkl
 
 from config.config import config
+from tensorflow import keras as K
 from model.MNIST2MNIST_M import MNIST2MNIST_M_DANN
+from datagenerator.DataGenerator import DataGenerator
 from tensorflow.examples.tutorials.mnist import input_data
-from utils.utils import batch_generator
+
+def shuffle_aligned_list(data):
+    """Shuffle arrays in a list by shuffling each array identically."""
+    num = data[0].shape[0]
+    p = np.random.permutation(num)
+    return [d[p] for d in data]
+
+def batch_generator(data, batch_size, shuffle=True):
+    """Generate batches of data.
+
+    Given a list of array-like objects, generate batches of a given
+    size by yielding a list of array-like objects corresponding to the
+    same slice of each input.
+    """
+    if shuffle:
+        data = shuffle_aligned_list(data)
+
+    batch_count = 0
+    while True:
+        if batch_count * batch_size + batch_size >= len(data[0]):
+            batch_count = 0
+
+            if shuffle:
+                data = shuffle_aligned_list(data)
+
+        start = batch_count * batch_size
+        end = start + batch_size
+        batch_count += 1
+        yield [d[start:end] for d in data]
 
 def run_main():
     """
@@ -43,6 +73,15 @@ def run_main():
     train_target_datagen = batch_generator([mnistm_train,mnist.train.labels],cfg.batch_size // 2)
     val_datagen = batch_generator([mnistm_test,mnist.test.labels],cfg.batch_size)
 
+    """
+    train_source_datagen = DataGenerator(os.path.join(cfg.dataset_dir, 'mnist'),int(cfg.batch_size/2),
+                                         cfg.image_size,source_flag=True,mode="train")
+    train_target_datagen = DataGenerator(os.path.join(cfg.dataset_dir, 'mnistM'),int(cfg.batch_size/2),
+                                         cfg.image_size,source_flag=False,mode="train")
+    val_datagen = DataGenerator(os.path.join(cfg.dataset_dir, 'mnistM'),cfg.batch_size,
+                                cfg.image_size,source_flag=False,mode="val")
+    """
+
     # 初始化每个epoch的训练次数和每次验证过程的验证次数
     train_source_batch_num = int(len(mnist_train) // (cfg.batch_size // 2))
     train_target_batch_num = int(len(mnistm_train) // (cfg.batch_size // 2))
@@ -51,6 +90,10 @@ def run_main():
 
     # 初始化相关参数
     interval = 2  # 验证间隔
+    """
+    train_num = cfg.train_dataset_size # 训练集样本数
+    val_num = cfg.val_dataset_size     # 验证集样本数
+    """
     train_num = len(mnist_train) +  len(mnistm_train)# 训练集样本数
     val_num = len(mnistm_test)     # 验证集样本数
     print("train on %d training samples with batch_size %d ,validation on %d val samples"

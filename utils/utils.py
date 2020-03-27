@@ -42,6 +42,7 @@ def plot_accuracy(x,y,path):
     plt.plot(x, val_accuracy, 'b--')
     plt.grid(True)
     plt.xlim(0, x[-1]+2)
+    #plt.xticks(x)
     plt.xlabel("epoch")
     plt.ylabel("accuracy")
     plt.legend(lengend_array,loc="best")
@@ -73,45 +74,10 @@ def plot_loss(x,y,path,mode="train"):
     plt.ylabel("loss")
     plt.xlim(0,x[-1]+2)
     plt.ylim(ymin=y_min)
+    #plt.xticks(x)
     plt.legend(lengend_array,loc="best")
     plt.savefig(path)
     plt.close()
-
-def shuffle_aligned_list(data):
-    """
-    这是是随机打乱数据的函数
-    :param data: 输入数据
-    :return:
-    """
-    num = data[0].shape[0]
-    p = np.random.permutation(num)
-    return [d[p] for d in data]
-
-def batch_generator(data, batch_size, shuffle=True):
-    """
-    这是构造数据生成器的函数
-    :param data: 输入
-    :param batch_size: 小批量大小
-    :param shuffle: 是否打乱随机数据集的标志
-    :return:
-    """
-    if shuffle:             # 随机打乱数据集标志为True，则随机打乱数据集
-        data = shuffle_aligned_list(data)
-
-    batch_count = 0         # 小批量数据集批次计数器
-    while True:
-        # 遍历完整个数据集，全部重置
-        if batch_count * batch_size + batch_size >= len(data[0]):
-            batch_count = 0
-
-            if shuffle:          # 随机打乱数据集标志为True，则随机打乱数据集
-                data = shuffle_aligned_list(data)
-
-        # 构造小批量数据集
-        start = batch_count * batch_size
-        end = start + batch_size
-        batch_count += 1
-        yield [d[start:end] for d in data]          # 构造数据生成器
 
 def learning_rate_schedule(process,init_learning_rate = 0.01,alpha = 10.0 , beta = 0.75):
     """

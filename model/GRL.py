@@ -25,3 +25,5 @@ class GradientReversalLayer(object):
 
         self.num_calls += 1
         return y
+
+GRL = GradientReversalLayer()

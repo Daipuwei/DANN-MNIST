@@ -18,10 +18,10 @@ from utils.utils import plot_loss
 from utils.utils import plot_accuracy
 from utils.utils import AverageMeter
 from utils.utils import make_summary
+
+from model.GRL import GRL
 from utils.utils import grl_lambda_schedule
 from utils.utils import learning_rate_schedule
-
-from model.GRL import GradientReversalLayer as GRL
 
 class MNIST2MNIST_M_DANN(object):
 
@@ -56,9 +56,14 @@ class MNIST2MNIST_M_DANN(object):
         # 定义模型保存类与加载类
         self.saver_save = tf.train.Saver(max_to_keep=100)  # 设置最大保存检测点个数为周期数
 
+        # 定义学习率
+        self.global_step = tf.Variable(tf.constant(0),trainable=False)
+        #self.process = self.global_step / self.cfg.epoch
+
         # 初始化优化器
-        self.global_step = tf.Variable(tf.constant(0), trainable=False)
+        #self.optimizer = MomentumOptimizer(self.learning_rate, momentum=self.cfg.momentum_rate)
         self.optimizer = MomentumOptimizer(self.learning_rate, momentum=self.cfg.momentum_rate)
+        #var_list = [v.name() for v in tf.trainable_variables()]
         self.train_op = self.optimizer.minimize(self.loss,global_step=self.global_step)
 
 
@@ -134,26 +139,6 @@ class MNIST2MNIST_M_DANN(object):
         self.image_cls = self.build_image_classify_model(source_feature)
         self.domain_cls = self.build_domain_classify_model(share_feature)
 
-    """
-    @tf.function
-    def train_per_step(self,inputs, targets):
-        with tf.GradientTape() as tape:
-            predicts = self.mnist2mnist_m_dann_model(inputs)
-            image_classification_pred,domain_classification_pred = predicts
-            source_labels,domain_labels = targets
-            # 求loss
-            image_classification_loss = tf.keras.metrics.categorical_crossentropy(source_labels,image_classification_pred)
-            domain_classification_loss = tf.keras.metrics.binary_crossentropy(domain_labels, domain_classification_pred)
-            loss_value = image_classification_loss+domain_classification_loss
-        # 根据损失求梯度
-        gradients = tape.gradient(loss_value, self.mnist2mnist_m_dann_model.trainable_variables)
-        # 把梯度和变量进行绑定
-        grads_and_vars = zip(gradients, self.mnist2mnist_m_dann_model.trainable_variables)
-        # 进行梯度更新
-        self.optimizer.apply_gradients(grads_and_vars)
-        return loss_value,image_classification_loss,domain_classification_loss
-    """
-
     def eval_on_val_dataset(self,sess,val_datagen,val_batch_num,ep):
         """
         这是评估模型在验证集上的性能的函数
@@ -169,7 +154,11 @@ class MNIST2MNIST_M_DANN(object):
             batch_mnist_m_image_data, batch_mnist_m_labels = val_datagen.__next__()#val_datagen.next_batch()
             batch_domain_labels = np.tile([0., 1.], [self.cfg.batch_size * 2, 1])
 
-            # 在验证阶段只利用目标域数据及其标签进行测试,计算模型在验证集上相关指标的值
+            #batch_mnist_m_image_data = (batch_mnist_m_image_data - self.cfg.val_image_mean) /255.0
+            #batch_mnist_m_domain_labels = np.ones((self.cfg.batch_size,1))
+            # 在验证阶段只利用目标域数据及其标签进行测试
+            #batch_domain_labels = np.concatenate((batch_mnist_m_domain_labels, batch_mnist_m_domain_labels), axis=0)
+            # 计算模型在验证集上相关指标的值
             val_loss, val_image_cls_loss, val_domain_cls_loss, val_acc = \
                 sess.run([self.loss, self.image_cls_loss, self.domain_cls_loss, self.acc],
                         feed_dict={self.source_image_input: batch_mnist_m_image_data,
@@ -187,10 +176,10 @@ class MNIST2MNIST_M_DANN(object):
         self.writer.add_summary(make_summary('val/val_domain_cls_loss', epoch_domain_cls_loss_avg.average),global_step=ep)
         self.writer.add_summary(make_summary('accuracy/val_accuracy', epoch_accuracy.average),global_step=ep)
 
-        self.writer1.add_summary(make_summary('val/val_loss', epoch_loss_avg.average),global_step=ep)
-        self.writer1.add_summary(make_summary('val/val_image_cls_loss', epoch_image_cls_loss_avg.average),global_step=ep)
-        self.writer1.add_summary(make_summary('val/val_domain_cls_loss', epoch_domain_cls_loss_avg.average),global_step=ep)
-        self.writer1.add_summary(make_summary('accuracy/val_accuracy', epoch_accuracy.average),global_step=ep)
+        #self.writer1.add_summary(make_summary('val/val_loss', epoch_loss_avg.average),global_step=ep)
+        #self.writer1.add_summary(make_summary('val/val_image_cls_loss', epoch_image_cls_loss_avg.average),global_step=ep)
+        #self.writer1.add_summary(make_summary('val/val_domain_cls_loss', epoch_domain_cls_loss_avg.average),global_step=ep)
+        #self.writer1.add_summary(make_summary('accuracy/val_accuracy', epoch_accuracy.average),global_step=ep)
         return epoch_loss_avg.average,epoch_image_cls_loss_avg.average,\
                    epoch_domain_cls_loss_avg.average,epoch_accuracy.average
 
@@ -248,7 +237,7 @@ class MNIST2MNIST_M_DANN(object):
 
             self.merged = tf.summary.merge_all()
             self.writer = tf.summary.FileWriter(log_dir, sess.graph)
-            self.writer1 = tf.summary.FileWriter(os.path.join("./tf_dir"), sess.graph)
+            #self.writer1 = tf.summary.FileWriter(os.path.join("./tf_dir"), sess.graph)
 
             print('\n----------- start to train -----------\n')
 
@@ -269,7 +258,14 @@ class MNIST2MNIST_M_DANN(object):
                     # 获取小批量数据集及其图像标签与域标签
                     batch_mnist_image_data, batch_mnist_labels = train_source_datagen.__next__()#train_source_datagen.next_batch()
                     batch_mnist_m_image_data, batch_mnist_m_labels = train_target_datagen.__next__()#train_target_datagen.next_batch()
-
+                    """
+                    print(np.shape(batch_mnist_image_data))
+                    print(np.shape(batch_mnist_labels))
+                    print(np.shape(batch_mnist_domain_labels))
+                    print(np.shape(batch_mnist_m_image_data))
+                    print(np.shape(batch_mnist_m_labels))
+                    print(np.shape(batch_mnist_m_domain_labels))
+                    """
                     # 计算学习率和GRL层的参数lambda
                     global_step = (ep-1)*train_iter_num + i
                     process = global_step * 1.0 / total_global_step
@@ -286,7 +282,7 @@ class MNIST2MNIST_M_DANN(object):
                                              self.learning_rate:leanring_rate,
                                              self.grl_lambd:grl_lambda})
                     self.writer.add_summary(make_summary('learning_rate', leanring_rate),global_step=global_step)
-                    self.writer1.add_summary(make_summary('learning_rate', leanring_rate), global_step=global_step)
+                    #self.writer1.add_summary(make_summary('learning_rate', leanring_rate), global_step=global_step)
 
                     # 更新训练损失与训练精度
                     epoch_loss_avg.update(train_loss,1)
@@ -313,12 +309,12 @@ class MNIST2MNIST_M_DANN(object):
                                    global_step=ep+1)
                 self.writer.add_summary(make_summary('accuracy/train_accuracy', epoch_accuracy.average),global_step=ep+1)
 
-                self.writer1.add_summary(make_summary('train/train_loss', epoch_loss_avg.average),global_step=ep+1)
-                self.writer1.add_summary(make_summary('train/train_image_cls_loss', epoch_image_cls_loss_avg.average),
-                                   global_step=ep+1)
-                self.writer1.add_summary(make_summary('train/train_domain_cls_loss', epoch_domain_cls_loss_avg.average),
-                                   global_step=ep+1)
-                self.writer1.add_summary(make_summary('accuracy/train_accuracy', epoch_accuracy.average),global_step=ep+1)
+                #self.writer1.add_summary(make_summary('train/train_loss', epoch_loss_avg.average),global_step=ep+1)
+                #self.writer1.add_summary(make_summary('train/train_image_cls_loss', epoch_image_cls_loss_avg.average),
+                #                   global_step=ep+1)
+                #self.writer1.add_summary(make_summary('train/train_domain_cls_loss', epoch_domain_cls_loss_avg.average),
+                #                   global_step=ep+1)
+                #self.writer1.add_summary(make_summary('accuracy/train_accuracy', epoch_accuracy.average),global_step=ep+1)
 
                 if (ep+1) % interval == 0:
                     # 评估模型在验证集上的性能
@@ -366,7 +362,6 @@ class MNIST2MNIST_M_DANN(object):
         # 读取图像数据，并进行数组维度扩充
         image = cv2.imread(image_path)
         image = np.expand_dims(image,axis=0)
-        image = (image - self.cfg.val_image_mean) / 255.0
 
         with tf.Session() as sess:
             # 初始化变量
@@ -390,7 +385,6 @@ class MNIST2MNIST_M_DANN(object):
         """
         # 批量读取图像数据
         images = np.array([cv2.imread(image_path) for image_path in image_paths])
-        images = (images - self.cfg.val_image_mean) / 255.0
 
         with tf.Session() as sess:
             # 初始化变量
