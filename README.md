@@ -9,7 +9,7 @@
 
 
 # Train
-首先下载[MNIST数据集](http://yann.lecun.com/exdb/mnist/)，放在项目文件的/data/mnist子文件夹下。之后下载[BSDS500数据集](https://www2.eecs.berkeley.edu/Research/Projects/CS/vision/grouping/resources.html#bsds500)放在项目文件的/data/BSR_bsds500.tgz路径下。
+首先下载[MNIST数据集](http://yann.lecun.com/exdb/mnist/)，放在项目文件的/dataset/mnist子文件夹下。之后下载[BSDS500数据集](https://www2.eecs.berkeley.edu/Research/Projects/CS/vision/grouping/resources.html#bsds500)放在项目文件的/data/BSR_bsds500.tgz路径下。
 
 之后为了生成MNSIT-M数据集，运行create_mnistm.py脚本，命令如下：
 
