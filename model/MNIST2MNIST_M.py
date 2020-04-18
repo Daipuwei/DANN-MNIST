@@ -325,8 +325,8 @@ class MNIST2MNIST_M_DANN(object):
                     val_image_cls_loss_results.append(val_image_cls_loss)
                     val_domain_cls_loss_results.append(val_domain_cls_loss)
                     val_accuracy_results.append(val_accuracy)
-                    str =  "Epoch {:03d}: val_image_cls_loss: {:.3f}, val_domain_cls_loss: {:.3f}, val_loss: {:.3f}" \
-                           ", val_accuracy: {:.3%}".format(ep+1,val_image_cls_loss,val_domain_cls_loss,val_loss,val_accuracy)
+                    str =  "Epoch{:03d}_val_image_cls_loss{:.3f}_val_domain_cls_loss{:.3f}_val_loss{:.3f}" \
+                           "_val_accuracy{:.3%}".format(ep+1,val_image_cls_loss,val_domain_cls_loss,val_loss,val_accuracy)
                     print(str)
 
                     if val_accuracy > val_acc_max:              # 验证精度达到当前最大，保存模型
