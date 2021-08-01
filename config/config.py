@@ -6,8 +6,6 @@
 # @Software: PyCharm
 
 import os
-import cv2
-import numpy as np
 
 class config(object):
 
@@ -75,5 +73,5 @@ class config(object):
             for key,value in self.__dict__.items():
                 if key in ["checkpoints_dir","logs_dir","config_dir"]:
                     value = os.path.join(value,time)
-                    s = key+": "+value+"\n"
-                    f.write(s)
+                s = key+": "+value+"\n"
+                f.write(s)
