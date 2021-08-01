@@ -62,9 +62,9 @@ python train_MNIST2MNIST_M.py
 
  CSDN博客链接：
 
- 1. [【深度域适配】一、DANN与梯度反转层（GRL）详解](https://daipuweiai.blog.csdn.net/article/details/104478550)
- 2. 【[深度域适配】二、利用DANN实现MNIST和MNIST-M数据集迁移训练](https://daipuweiai.blog.csdn.net/article/details/104495520)
+ 1. [【深度域自适应】一、DANN与梯度反转层（GRL）详解](https://daipuweiai.blog.csdn.net/article/details/104478550)
+ 2. [【深度域自适应】二、利用DANN实现MNIST和MNIST-M数据集迁移训练](https://daipuweiai.blog.csdn.net/article/details/104495520)
 
 知乎专栏链接：
- 1. [【深度域适配】一、DANN与梯度反转层（GRL）详解](https://zhuanlan.zhihu.com/p/109051269)
- 2. 【[深度域适配】二、利用DANN实现MNIST和MNIST-M数据集迁移训练](https://zhuanlan.zhihu.com/p/109057360)
+ 1. [【深度域自适应】一、DANN与梯度反转层（GRL）详解](https://zhuanlan.zhihu.com/p/109051269)
+ 2. [【深度域自适应】二、利用DANN实现MNIST和MNIST-M数据集迁移训练](https://zhuanlan.zhihu.com/p/109057360)
