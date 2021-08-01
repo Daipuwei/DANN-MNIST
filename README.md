@@ -49,7 +49,7 @@ python train_MNIST2MNIST_M.py
 
 ![超参数可视化](https://github.com/Daipuwei/DANN-MNIST-tf2/blob/master/image/hyperparameter.png#pic_center)
 
-接着是训练数据集和验证数据集的**图像分类精度**和**域分类精度**在训练过程中的数据可视化，其中蓝色代表训练集，红色代表验证集。
+接着是训练数据集和验证数据集的**图像分类精度**和**域分类精度**在训练过程中的数据可视化，**其中蓝色代表训练集，红色代表验证集。训练精度是在源域数据集即MNIST数据集上的统计结果，验证精度是在目标域数据集即MNIST-M数据集上的统计结果。**
 
 ![指标可视化](https://github.com/Daipuwei/DANN-MNIST-tf2/blob/master/image/acc.png#pic_center)
 
