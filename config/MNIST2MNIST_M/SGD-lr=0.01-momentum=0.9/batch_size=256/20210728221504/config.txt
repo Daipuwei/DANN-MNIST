@@ -1,0 +1,13 @@
+pre_model_path:None
+checkpoints_dir:/home/dpw/github_code/DANN-MNIST-tf2-master/checkpoints/MNIST2MNIST_M/SGD-lr=0.01-momentum=0.9/batch_size=256/20210730210435/20210730210435
+logs_dir:/home/dpw/github_code/DANN-MNIST-tf2-master/logs/MNIST2MNIST_M/SGD-lr=0.01-momentum=0.9/batch_size=256/20210730210435/20210730210435
+config_dir:/home/dpw/github_code/DANN-MNIST-tf2-master/config/MNIST2MNIST_M/SGD-lr=0.01-momentum=0.9/batch_size=256/20210730210435/20210730210435
+image_input_shape:(28, 28, 3)
+image_size:28
+init_learning_rate:0.01
+momentum_rate:0.9
+batch_size:256
+epoch:5000
+pixel_mean:[45.652287 45.652287 45.652287]
+source_dataset_path:/home/dpw/github_code/DANN-MNIST-tf2-master/model_data/dataset/MNIST/mnist_data.pkl
+target_dataset_path:/home/dpw/github_code/DANN-MNIST-tf2-master/model_data/dataset/MNIST_M/mnist_m_data.pkl
