@@ -1,0 +1,3 @@
+checkpoints_dir: /home/dpw/deeplearning/DANN-MNIST-tf2-master/checkpoints/MNIST2MNIST_M/SGD-lr=0.01-momentum=0.9/batch_size=256/20210725014639/20210725014639
+logs_dir: /home/dpw/deeplearning/DANN-MNIST-tf2-master/logs/MNIST2MNIST_M/SGD-lr=0.01-momentum=0.9/batch_size=256/20210725014639/20210725014639
+config_dir: /home/dpw/deeplearning/DANN-MNIST-tf2-master/config/MNIST2MNIST_M/SGD-lr=0.01-momentum=0.9/batch_size=256/20210725014639/20210725014639

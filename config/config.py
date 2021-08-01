@@ -16,15 +16,13 @@ class config(object):
         "checkpoints_dir":os.path.abspath("./checkpoints"),
         "logs_dir":os.path.abspath("./logs"),
         "config_dir":os.path.abspath("./config"),
-        "dataset_dir": os.path.abspath("./dataset"),
-        #"dataset_dir": os.path.abspath("/input0"),
-        "result_dir": os.path.abspath("./result"),
         "image_input_shape":(28,28,3),
         "image_size":28,
         "init_learning_rate": 1e-2,
-        "momentum_rate": 0.9,
-        "batch_size":64,
+        "momentum_rate":0.9,
+        "batch_size":256,
         "epoch":500,
+        "pixel_mean":[45.652287,45.652287,45.652287],
     }
 
     def __init__(self,**kwargs):
@@ -38,13 +36,11 @@ class config(object):
         self.__dict__.update(kwargs)
 
         if not os.path.exists(self.checkpoints_dir):
-            os.mkdir(self.checkpoints_dir)
-
+            os.makedirs(self.checkpoints_dir)
         if not os.path.exists(self.logs_dir):
-            os.mkdir(self.logs_dir)
-
-        if not os.path.exists(self.result_dir):
-            os.mkdir(self.result_dir)
+            os.makedirs(self.logs_dir)
+        if not os.path.exists(self.config_dir):
+            os.makedirs(self.config_dir)
 
     def set(self,**kwargs):
         """
@@ -66,16 +62,13 @@ class config(object):
         self.checkpoints_dir = os.path.join(self.checkpoints_dir,time)
         self.logs_dir = os.path.join(self.logs_dir,time)
         self.config_dir = os.path.join(self.config_dir,time)
-        self.result_dir = os.path.join(self.result_dir,time)
 
         if not os.path.exists(self.config_dir):
-            os.mkdir(self.config_dir)
+            os.makedirs(self.config_dir)
         if not os.path.exists(self.checkpoints_dir):
-            os.mkdir(self.checkpoints_dir)
+            os.makedirs(self.checkpoints_dir)
         if not os.path.exists(self.logs_dir):
-            os.mkdir(self.logs_dir)
-        if not os.path.exists(self.result_dir):
-            os.mkdir(self.result_dir)
+            os.makedirs(self.logs_dir)
 
         config_txt_path = os.path.join(self.config_dir,"config.txt")
         with open(config_txt_path,'a') as f:
